@@ -101,4 +101,60 @@ router.delete('/gateways/:serialNumber', async (req, res) => {
 });
 
 
+// update a device in a gateway
+router.put('/gateways/:serialNumber/devices/:uid', [
+    body('vendor').not().isEmpty().trim().escape(),
+], async (req, res) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        return res.status(400).json({ errors: errors.array() });
+    }
+    try {
+        const gateway = await Gateway.findOne({ serialNumber: req.params.serialNumber });
+        if (!gateway) {
+            return res.status(404).json({ msg: 'Gateway not found' });
+        }
+
+        const deviceIndex = gateway.devices.findIndex(device =>
+        {
+            console.log(device)
+        return    device.uid === Number(req.params.uid)
+        })
+
+            ;
+        if (deviceIndex === -1) {
+            return res.status(404).json({ msg: 'Device not found' });
+        }
+
+        gateway.devices[deviceIndex] = { ...gateway.devices[deviceIndex], ...req.body };
+        await gateway.save();
+        res.json(gateway);
+    } catch (error) {
+        console.error(error);
+        res.status(500).send('Server Error');
+    }
+});
+
+
+// delete a device from a gateway
+router.delete('/gateways/:serialNumber/devices/:uid', async (req, res) => {
+    try {
+        const gateway = await Gateway.findOne({ serialNumber: req.params.serialNumber });
+        if (!gateway) {
+            return res.status(404).json({ msg: 'Gateway not found' });
+        }
+        const device = gateway.devices.find(d => d.uid === req.params.uid);
+        if (!device) {
+            return res.status(404).json({ msg: 'Device not found' });
+        }
+        gateway.devices = gateway.devices.filter(d => d.uid !== req.params.uid);
+        await gateway.save();
+        res.json(gateway);
+    } catch (error) {
+        console.error(error);
+        res.status(500).send('Server Error');
+    }
+});
+
+
 module.exports = router;

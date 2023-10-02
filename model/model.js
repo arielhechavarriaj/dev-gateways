@@ -59,5 +59,3 @@ const gatewaySchema = new mongoose.Schema({
 module.exports = {
     Gateway: mongoose.model('Gateway', gatewaySchema),
 };
-
-
