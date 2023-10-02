@@ -53,6 +53,7 @@ const gatewaySchema = new mongoose.Schema({
             },
             message: () => `No more than 10 devices are allowed per gateway!`,
         },
+        required:false
     },
 });
 
