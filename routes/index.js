@@ -23,11 +23,42 @@ router.post('/gateways', [
 ], async (req, res) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
+    console.log(123)
     return res.status(400).json({ errors: errors.array() });
   }
 
   try {
     const gateway = new Gateway(req.body);
+    await gateway.save();
+    res.json(gateway);
+  } catch (error) {
+    console.error(error);
+    res.status(500).send('Server Error');
+  }
+});
+
+// add a new device to a gateway
+router.post('/gateways/:serialNumber/devices', [
+  body('uid').not().isEmpty().isInt(),
+  body('vendor').not().isEmpty().trim().escape(),
+], async (req, res) => {
+
+
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res.status(400).json({ errors: errors.array() });
+  }
+
+  try {
+    const gateway = await Gateway.findOne({ serialNumber: req.params.serialNumber });
+    if (!gateway) {
+      return res.status(404).json({ msg: 'Gateway not found' });
+    }
+    if (gateway.devices.length >= 10) {
+      return res.status(400).json({ msg: 'Maximum number of devices reached for this gateway' });
+    }
+    const device = req.body;
+    gateway.devices.push(device);
     await gateway.save();
     res.json(gateway);
   } catch (error) {
