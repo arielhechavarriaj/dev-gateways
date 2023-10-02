@@ -146,10 +146,6 @@ web_modules/
 
 ### dotenv environment variable files ###
 .env
-.env.development.local
-.env.test.local
-.env.production.local
-.env.local
 
 ### parcel-bundler cache (https://parceljs.org/) ###
 .cache
@@ -174,7 +170,6 @@ dist
 
 ### vuepress v2.x temp and cache directory ###
 .temp
-.cache
 
 ### Docusaurus cache and generated files ###
 .docusaurus
@@ -384,7 +379,6 @@ ClientBin/
 *.dbproj.schemaview
 *.pfx
 *.publishsettings
-node_modules/
 orleans.codegen.cs
 
 # RIA/Silverlight projects
@@ -532,16 +526,7 @@ instance/
 # Sphinx documentation
 docs/_build/
 
-# PyBuilder
-.pybuilder/
-target/
 
-# Jupyter Notebook
-.ipynb_checkpoints
-
-# IPython
-profile_default/
-ipython_config.py
 
 # pyenv
 #   For a library or package, you might want to ignore these files since the code is
@@ -582,12 +567,6 @@ celerybeat.pid
 
 # Environments
 .env
-.venv
-env/
-venv/
-ENV/
-env.bak/
-venv.bak/
 
 # Spyder project settings
 .spyderproject
