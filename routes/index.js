@@ -14,4 +14,27 @@ router.get('/gateways', async (req, res) => {
   }
 });
 
+
+// add a new gateway
+router.post('/gateways', [
+  body('serialNumber').not().isEmpty().trim().escape(),
+  body('name').not().isEmpty().trim().escape(),
+  body('ipv4').isIP(),
+], async (req, res) => {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res.status(400).json({ errors: errors.array() });
+  }
+
+  try {
+    const gateway = new Gateway(req.body);
+    await gateway.save();
+    res.json(gateway);
+  } catch (error) {
+    console.error(error);
+    res.status(500).send('Server Error');
+  }
+});
+
+
 module.exports = router;
