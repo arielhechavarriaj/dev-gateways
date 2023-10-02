@@ -86,5 +86,19 @@ router.put('/gateways/:serialNumber', [
     }
 });
 
+// delete a gateway by its serial number
+router.delete('/gateways/:serialNumber', async (req, res) => {
+    try {
+        const gateway = await Gateway.findOneAndDelete({ serialNumber: req.params.serialNumber });
+        if (!gateway) {
+            return res.status(404).json({ msg: 'Gateway not found' });
+        }
+        res.json({ msg: 'Gateway deleted' });
+    } catch (error) {
+        console.error(error);
+        res.status(500).send('Server Error');
+    }
+});
+
 
 module.exports = router;
